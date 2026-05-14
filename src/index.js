@@ -68,7 +68,7 @@ const DOMfunc = (() => {
     }
 
     const criticalTime = (todo) => {
-        return findRemainingDays(todo) <= 2;
+        return this.findRemainingDays(todo) <= 2;
     }
 
     const displayProjectTodos = (project) => {
@@ -111,16 +111,21 @@ const DOMfunc = (() => {
 })();
 
 const control = (() => {
+
     const init = () => {
         const defaultProject = new Project("Untitled Project");
-        const date1 = new Date(2026, 4, 20);
-        const date2 = new Date(2026, 4, 17);
-        const todo1 = new TodoItem("Todo-1", "A default todo for testing", date1, "low");
-        const todo2 = new TodoItem("Todo-2", "Another one of those", date2, "high");
-        defaultProject.addTodo(todo1);
-        defaultProject.addTodo(todo2);
+        const newProjButton = document.querySelector(".newproject");
+        newProjButton.addEventListener("click", () => {
+
+        })
+        // const date1 = new Date(2026, 4, 20);
+        // const date2 = new Date(2026, 4, 17);
+        // const todo1 = new TodoItem("Todo-1", "A default todo for testing", date1, "low");
+        // const todo2 = new TodoItem("Todo-2", "Another one of those", date2, "high");
+        // defaultProject.addTodo(todo1);
+        // defaultProject.addTodo(todo2);
     
-        DOMfunc.displayProjectTodos(defaultProject);
+        // DOMfunc.displayProjectTodos(defaultProject);
     }
 
     return { init }

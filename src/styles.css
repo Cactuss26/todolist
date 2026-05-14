@@ -21,6 +21,20 @@ body {
     align-items: center;
     font-size: 32px;
     border: 1px solid white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40px 0px 10px 0px;
+}
+
+.newproject {
+    padding: 10px 50px;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+.newproject:hover {
+    cursor: pointer;
 }
 
 .sidebar {
