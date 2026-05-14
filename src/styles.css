@@ -39,9 +39,26 @@ body {
 
 .content > h3 {
     font-size: 28px;
+    border-bottom: 1px solid white;
+}
+
+ul {
+    margin: 10px 1px;
 }
 
 li {
     list-style-type: none;
+    padding: 10px;
+}
+
+.todoTitle {
     font-size: 20px;
+}
+
+.dueDate {
+    color: white;
+}
+
+.Description {
+    color: grey;
 }
