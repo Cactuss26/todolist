@@ -61,15 +61,34 @@ class Project {
 
 
 const DOMfunc = (() => {
-    const today = new Date();
+    
+    const DOMInit = () => {
+        const today = new Date();
+        const newProjButton = document.querySelector(".newproject");
+        newProjButton.addEventListener("click", control.newProjAction);
+    }
 
     const findRemainingDays = (todo) => {
         return differenceInDays(todo.dueDate, today);
-    }
+    };
 
     const criticalTime = (todo) => {
-        return this.findRemainingDays(todo) <= 2;
-    }
+        return findRemainingDays(todo) <= 2;
+    };
+
+    const newProjPopup = () => {
+        document.querySelector(".blursheet").classList.remove("hide");
+        const nameForm = document.querySelector("#projnameform");
+        
+        let projName;
+        nameForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const inputField = document.querySelector("#projname");
+            projName = inputField.value;
+        });
+        
+        return projName;
+    };
 
     const displayProjectTodos = (project) => {
         const contentBox = document.querySelector(".content");
@@ -107,25 +126,21 @@ const DOMfunc = (() => {
         contentBox.appendChild(todolist);
     }
 
-    return { displayProjectTodos }
+    return { DOMInit, displayProjectTodos, newProjPopup }
 })();
 
 const control = (() => {
 
-    const init = () => {
-        const defaultProject = new Project("Untitled Project");
-        const newProjButton = document.querySelector(".newproject");
-        newProjButton.addEventListener("click", () => {
+    const newProjAction = (e) => {
+        const name = DOMfunc.newProjPopup();
+        const project = new Project(name);
+        DOMfunc.displayProjectTodos(project);
+    }
 
-        })
-        // const date1 = new Date(2026, 4, 20);
-        // const date2 = new Date(2026, 4, 17);
-        // const todo1 = new TodoItem("Todo-1", "A default todo for testing", date1, "low");
-        // const todo2 = new TodoItem("Todo-2", "Another one of those", date2, "high");
-        // defaultProject.addTodo(todo1);
-        // defaultProject.addTodo(todo2);
-    
-        // DOMfunc.displayProjectTodos(defaultProject);
+    const init = () => {
+        DOMfunc.DOMInit();
+        const defaultProject = new Project("Untitled Project");
+        DOMfunc.displayProjectTodos(defaultProject);
     }
 
     return { init }
