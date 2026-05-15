@@ -61,38 +61,22 @@ class Project {
 
 
 const DOMfunc = (() => {
-    
-    const DOMInit = () => {
-        const today = new Date();
-        const newProjButton = document.querySelector(".newproject");
-        newProjButton.addEventListener("click", control.newProjAction);
+    const projPopupVisible = () => {
+        document.querySelector(".blursheet").classList.remove("hide");
+        document.querySelector(".projPopup").classList.remove("hide");
+    };
+
+    const projPopupHide = () => {
+        document.querySelector(".blursheet").classList.add("hide");
+        document.querySelector(".projPopup").classList.add("hide");
     }
 
-    const findRemainingDays = (todo) => {
-        return differenceInDays(todo.dueDate, today);
-    };
-
-    const criticalTime = (todo) => {
-        return findRemainingDays(todo) <= 2;
-    };
-
-    const newProjPopup = () => {
-        document.querySelector(".blursheet").classList.remove("hide");
-        const nameForm = document.querySelector("#projnameform");
-        
-        let projName;
-        nameForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const inputField = document.querySelector("#projname");
-            projName = inputField.value;
-        });
-        
-        return projName;
-    };
+    const extractProjectName = () => {
+        return document.querySelector("#projname").value;
+    }
 
     const displayProjectTodos = (project) => {
         const contentBox = document.querySelector(".content");
-
         const todos = project.todos;
         const projectName = document.createElement("h3");
         projectName.textContent = project.name;
@@ -107,9 +91,9 @@ const DOMfunc = (() => {
             todoDate.classList.add("dueDate");
             todoTitle.classList.add("todoTitle")
             todoDate.textContent = `${format(todos[i].dueDate, "do MMM yyyy")} -
-             ${findRemainingDays(todos[i])} days remaining`;
+             ${control.findRemainingDays(todos[i])} days remaining`;
 
-            if (criticalTime(todos[i])) {
+            if (control.criticalTime(todos[i])) {
                 todoDate.style.color = "red";
             }
             else {
@@ -122,28 +106,46 @@ const DOMfunc = (() => {
             todolist.appendChild(item);
         }
         
-        contentBox.appendChild(projectName);
-        contentBox.appendChild(todolist);
+        contentBox.replaceChildren(projectName, todolist);
     }
 
-    return { DOMInit, displayProjectTodos, newProjPopup }
+    return { displayProjectTodos, projPopupVisible, projPopupHide, extractProjectName }
 })();
 
 const control = (() => {
+    const today = new Date();
+
+    const findRemainingDays = (todo) => {
+        return differenceInDays(todo.dueDate, today);
+    };
+
+    const criticalTime = (todo) => {
+        return findRemainingDays(todo) <= 2;
+    };
 
     const newProjAction = (e) => {
-        const name = DOMfunc.newProjPopup();
-        const project = new Project(name);
-        DOMfunc.displayProjectTodos(project);
+        DOMfunc.projPopupVisible();
+        document.querySelector(".submitButton").addEventListener("click", (e) => {
+            e.preventDefault();
+            const name = DOMfunc.extractProjectName();
+            DOMfunc.projPopupHide();
+            const project = new Project(name);
+            DOMfunc.displayProjectTodos(project);
+        });
     }
 
     const init = () => {
-        DOMfunc.DOMInit();
+        const newProjButton = document.querySelector(".newproject");
+        newProjButton.addEventListener("click", newProjAction);
+
         const defaultProject = new Project("Untitled Project");
+        // const date1 = new Date(2026, 4, 25);
+        // const todo1 = new TodoItem("Todo-1", "A testing thingy", date1, "low");
+        // defaultProject.addTodo(todo1);
         DOMfunc.displayProjectTodos(defaultProject);
     }
 
-    return { init }
+    return { init, newProjAction, findRemainingDays, criticalTime }
 })();
 
 document.addEventListener("DOMContentLoaded", () => {

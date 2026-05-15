@@ -85,6 +85,7 @@ li {
     width: 600px;
     height: 250px;
     border-radius: 20px;
+    transition: opacity 0.2s;
 }
 
 .projPopup {
@@ -103,6 +104,7 @@ li {
 
 .hide {
     visibility: hidden;
+    opacity: 0;
 }
 
 .blursheet {
@@ -111,9 +113,7 @@ li {
     position: absolute;
     width: 100vw;
     height: 100vh;
-}
-
-.blurring {
+    transition: opacity 0.2s;
     backdrop-filter: blur(5px);
 }
 
