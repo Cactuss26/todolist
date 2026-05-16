@@ -10,11 +10,11 @@ body {
     width: 100vw;
     display: grid;
     grid-template-columns: 1fr 5fr;
-    grid-template-rows: 1fr 3fr;
+    grid-template-rows: 1fr 1fr 6fr;
 }
 
 .title {
-    grid-row: 1/2;
+    grid-row: 1/3;
     grid-column: 1/2;
     display: flex;
     justify-content: center;
@@ -38,22 +38,57 @@ body {
 }
 
 .sidebar {
-    grid-row: 2/3;
+    grid-row: 3/4;
     grid-column: 1/2;
     border: 1px solid white;
 
 }
 
+.contentTitle {
+    grid-row: 1/2;
+    grid-column: 2/3;
+    border: 1px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 40px;
+}
+
+.contentTitle > h3 {
+    font-size: 28px;
+}
+
 .content {
-    grid-row: 1/3;
+    grid-row: 2/4;
     grid-column: 2/3;
     border: 1px solid white;
     padding: 20px;
+    overflow: scroll;
 }
 
-.content > h3 {
-    font-size: 28px;
+.content::-webkit-scrollbar {
+    display: none;    
+}
+
+.addTodoButton {
+    padding: 8px 25px;
+    border-radius: 10px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
     border-bottom: 1px solid white;
+    padding-bottom: 5px;
+    gap: 16px;
+}
+
+.header > h3 {
+    font-size: 28px;
+}
+
+.header > button {
+
 }
 
 ul {
@@ -138,15 +173,78 @@ li {
     right: 120px;
 }
 
-.submitButton {
+.projSubmitButton {
     width: 100px;
     margin-top: 10px;
     padding: 5px 25px;
     border-radius: 10px;
 }
 
-.submitButton:hover {
+.projSubmitButton:hover {
     cursor: pointer;
+}
+
+.todoPopup {
+    top: 20vh;
+    padding: 20px;
+    height: 400px;
+}
+
+.todoPopup > h1 {
+    text-align: center;
+    border-bottom: 1px solid white;
+}
+
+.formelement {
+    display: flex;
+    flex-direction: column; 
+    gap: 5px;
+}
+
+#newtodoform {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    align-items: center;
+}
+
+.todoname > input {
+    width: 400px;
+    height: 25px;
+    border-radius: 10px;
+    padding-left: 5px;
+}
+
+.tododescription > textarea {
+    width: 400px;
+    height: 80px;
+    resize: none;
+    border-radius: 10px;
+    padding-left: 5px;
+    padding-top: 5px;
+}
+
+.todootherinfo {
+    display: flex;
+    gap: 170px;
+}
+
+.tododate > input {
+    height: 25px;
+    border-radius: 5px;
+    padding-left: 2px;
+}
+
+.todopriority > select {
+    height: 25px;
+    border-radius: 5px;
+}
+
+.todoSubmitButton {
+    margin-top: 50px;
+    padding: 5px 25px;
+    border-radius: 10px;
 }
 
 button {

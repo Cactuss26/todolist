@@ -7,18 +7,51 @@
 </head>
 <body>
     <div class="title">
-        <h3>Todo-List App</h3>
+        <h3>Todo-List</h3>
         <button class="newproject">New Project</button>
     </div>
     <div class="sidebar"></div>
+    <div class="contentTitle">
+        <h3 class="projName">Untitled Project</h3>
+        <button type="button" class="addTodoButton">Add Todo</button>
+    </div>
     <div class="content"></div>
     <div class="blursheet hide">
-        <div class="centralPopupDiv projPopup hide">
+        <div class="projPopup centralPopupDiv hide">
             <h1>Create a new Project</h1>
             <form action="./" id="projnameform">
                 <label for="projname">Name of the Project</label>
-                <input type="text" required name="projname" id="projname" placeholder="E.g: Tomorrow's tasks">
-                <button type="submit" class="submitButton">OK</button>
+                <input type="text" required autofocus name="projname" id="projname" placeholder="E.g: Tomorrow's tasks">
+                <button type="submit" class="projSubmitButton">OK</button>
+            </form>
+        </div>
+        <div class="todoPopup centralPopupDiv hide">
+            <h1>Add a new TODO</h1>
+            <form action="./" id="newtodoform">
+                <div class="todoname formelement">
+                    <label for="todoname">Name of the TODO(*)</label>
+                    <input type="text" required autofocus name="todoname" id="todoname" placeholder="E.g: Meeting">
+                </div>
+                <div class="tododescription formelement">
+                    <label for="tododescription">Description</label>
+                    <textarea name="tododescription" id="tododescription"></textarea>
+                </div>
+                <div class="todootherinfo">
+                    <div class="tododate formelement">
+                        <label for="tododate">Date(*)</label>
+                        <input type="date" required name="tododate" id="tododate">
+                    </div>
+                    <div class="todopriority formelement">
+                        <label for="todopriority">Priority(*)</label>
+                        <select name="todopriority" id="todopriority" required>
+                            <option value="" disabled selected>Choose Priority</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="formelement todoSubmitButton">OK</button>
             </form>
         </div>
     </div>
