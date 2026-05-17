@@ -76,6 +76,17 @@ body {
     gap: 10px;
 }
 
+.content > ul > li {
+    display: flex;
+    gap: 100px;
+    align-items: center;
+}
+
+.delbutton {
+    padding: 8px 25px;
+    border-radius: 8px;
+}
+
 .addTodoButton {
     padding: 8px 25px;
     border-radius: 10px;
@@ -91,10 +102,6 @@ body {
 
 .header > h3 {
     font-size: 28px;
-}
-
-.header > button {
-
 }
 
 ul {
@@ -287,13 +294,14 @@ li {
     cursor: default;
 }
 
+
+
 li {
     padding: 0;
 }
 
 button {
     transition: background-color 0.2s;
-    transition: color 0.1s;
 }
 
 button:hover {

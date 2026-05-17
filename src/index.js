@@ -5,6 +5,7 @@ let projects = [];
 
 class TodoItem {
     constructor(title, description, dueDate, prior) {
+        this.id = control.createUniqueID();
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
@@ -49,8 +50,8 @@ class TodoItem {
 
 
 class Project {
-    constructor(id, name) {
-        this.id = id;
+    constructor(name) {
+        this.id = control.createUniqueID();
         this.name = name;
     }
 
@@ -127,7 +128,16 @@ const DOMfunc = (() => {
             todoTitle.textContent = todos[i].title;
             desc.textContent = todos[i].description;
             todoPriority.textContent = `Priority: ${todos[i].priority}`;
-            item.append(todoTitle, desc, todoDate, todoPriority);
+            const todoDiv = document.createElement("div");
+            todoDiv.classList.add("tododiv");
+            todoDiv.append(todoTitle, desc, todoDate, todoPriority);
+            const delButton = document.createElement("button");
+            delButton.type = "button";
+            delButton.classList.add("delbutton");
+            delButton.id = todos[i].id;
+            delButton.textContent = "Delete";
+            delButton.addEventListener("click", control.deleteTodo);
+            item.append(todoDiv, delButton);
             todolist.appendChild(item);
         }
 
@@ -135,21 +145,21 @@ const DOMfunc = (() => {
     }
 
     const displayProjects = () => {
-            const projList = document.createElement("ul");
-            projList.classList.add("projListButtons");
-            for (let proj = 0; proj < projects.length; proj++) {
-                const item = document.createElement("li");
-                const projButton = document.createElement("button");
-                projButton.type = "button";
-                projButton.classList.add("blackProjButton");
-                projButton.textContent = projects[proj].name;
-                projButton.id = `${projects[proj].id}`;
-                projButton.addEventListener("click", control.setCurrentProject)
-                item.appendChild(projButton);
-                projList.appendChild(item);
-            }
-            
-            document.querySelector(".sidebar").replaceChildren(projList);
+        const projList = document.createElement("ul");
+        projList.classList.add("projListButtons");
+        for (let proj = 0; proj < projects.length; proj++) {
+            const item = document.createElement("li");
+            const projButton = document.createElement("button");
+            projButton.type = "button";
+            projButton.classList.add("blackProjButton");
+            projButton.textContent = projects[proj].name;
+            projButton.id = `${projects[proj].id}`;
+            projButton.addEventListener("click", control.setCurrentProject)
+            item.appendChild(projButton);
+            projList.appendChild(item);
+        }
+        
+        document.querySelector(".sidebar").replaceChildren(projList);
     }
 
     const selectProjButton = (project) => {
@@ -181,7 +191,7 @@ const control = (() => {
         e.preventDefault();
         const name = DOMfunc.extractProjectName();
         DOMfunc.projPopupHide();
-        const project = new Project(createProjectid(), name);
+        const project = new Project(name);
         projects.push(project);
         DOMfunc.displayProjectTodos(project);
         DOMfunc.displayProjects();
@@ -226,8 +236,24 @@ const control = (() => {
     const addProjectTodoAction = (e) => {
         DOMfunc.todoPopupVisible();
     }
-    
-    const createProjectid = () => {
+
+    const deleteTodo = (e) => {
+        const listItem = e.target.parentNode;
+        const list = listItem.parentNode;
+
+        list.removeChild(listItem);
+        const todoList = currentProject.todos;
+        for (let i = 0; i < todoList.length; i++) {
+            if (todoList[i].id == e.target.id) {
+                todoList.splice(i, 1);
+                break;
+            }
+        }
+        
+        DOMfunc.displayProjectTodos(currentProject);
+    }
+
+    const createUniqueID = () => {
         const chars = "abcdefghijklmnopqrstuvwxyz"
         let s = "";
         for (let i = 0; i < 30; i++) {
@@ -244,7 +270,7 @@ const control = (() => {
         document.querySelector(".projSubmitButton").addEventListener("click", addProj);
 
 
-        const defaultProject = new Project(createProjectid(), "Untitled Project");
+        const defaultProject = new Project("Untitled Project");
         projects.push(defaultProject);
         currentProject = defaultProject;
         // const date1 = new Date(2026, 4, 25);
@@ -255,7 +281,7 @@ const control = (() => {
         DOMfunc.displayProjectTodos(defaultProject);
     }
 
-    return { init, findRemainingDays, criticalTime, setCurrentProject }
+    return { init, findRemainingDays, criticalTime, setCurrentProject, createUniqueID, deleteTodo }
 })();
 
 document.addEventListener("DOMContentLoaded", () => {
