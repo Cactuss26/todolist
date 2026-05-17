@@ -186,7 +186,7 @@ const control = (() => {
     const criticalTime = (todo) => {
         return findRemainingDays(todo) <= 2;
     };
-
+    
     const addProj = (e) => {
         e.preventDefault();
         const name = DOMfunc.extractProjectName();
@@ -198,6 +198,7 @@ const control = (() => {
         DOMfunc.deselectProjButton(currentProject);
         currentProject = project;
         DOMfunc.selectProjButton(currentProject);
+        storeData();
     }
 
     const addProjAction = (e) => {
@@ -217,6 +218,7 @@ const control = (() => {
         currentProject.addTodo(todo);
         DOMfunc.displayProjectTodos(currentProject);
         DOMfunc.todoPopupHide();
+        storeData();
     }
 
     const setCurrentProject = (e) => {
@@ -251,6 +253,7 @@ const control = (() => {
         }
         
         DOMfunc.displayProjectTodos(currentProject);
+        storeData();
     }
 
     const createUniqueID = () => {
@@ -263,22 +266,49 @@ const control = (() => {
         return s;
     }
 
+    const retrieveData = () => {
+        const storedProjects = localStorage.getItem("projects");
+        
+        if (storedProjects !== null) {
+            projects = JSON.parse(storedProjects);
+            for (let i = 0; i < projects.length; i++) {
+                projects[i].addTodo = (todo) => {
+                    projects[i].todos.push(todo);
+                };
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    const storeData = () => {
+        localStorage.setItem("projects", JSON.stringify(projects));
+    }
+
     const init = () => {
         document.querySelector(".newproject").addEventListener("click", addProjAction);
         document.querySelector(".addTodoButton").addEventListener("click", addProjectTodoAction);
         document.querySelector(".todoSubmitButton").addEventListener("click", addProjectTodo);
         document.querySelector(".projSubmitButton").addEventListener("click", addProj);
+        
+        
+        if (!retrieveData()) {
+            const defaultProject = new Project("Untitled Project");
+            projects.push(defaultProject);
+            currentProject = defaultProject;
+        }
+        else {
+            currentProject = projects[0];
+        }
 
-
-        const defaultProject = new Project("Untitled Project");
-        projects.push(defaultProject);
-        currentProject = defaultProject;
         // const date1 = new Date(2026, 4, 25);
         // const todo1 = new TodoItem("Todo-1", "A testing thingy", date1, "low");
         // defaultProject.addTodo(todo1);
         DOMfunc.displayProjects();
         DOMfunc.selectProjButton(currentProject);
-        DOMfunc.displayProjectTodos(defaultProject);
+        DOMfunc.displayProjectTodos(currentProject);
+        storeData();
     }
 
     return { init, findRemainingDays, criticalTime, setCurrentProject, createUniqueID, deleteTodo }
