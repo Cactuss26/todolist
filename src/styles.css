@@ -41,7 +41,10 @@ body {
     grid-row: 3/4;
     grid-column: 1/2;
     border: 1px solid white;
-
+    display: flex;
+    flex-direction: column;
+    overflow: overlay;
+    scrollbar-width: thin;
 }
 
 .contentTitle {
@@ -63,11 +66,14 @@ body {
     grid-column: 2/3;
     border: 1px solid white;
     padding: 20px;
-    overflow: scroll;
+    overflow: overlay;
+    scrollbar-width: auto;
 }
 
-.content::-webkit-scrollbar {
-    display: none;    
+.content > ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .addTodoButton {
@@ -247,9 +253,45 @@ li {
     border-radius: 10px;
 }
 
+.projListButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.projListButtons > li {
+    height: 8vh;
+}
+
+.blackProjButton {
+    background-color: black;
+    color: white;
+    width: 100%;
+    height: 100%;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+    font-size: 20px;
+}
+
+.blackProjButton:hover {
+    color: black;
+    background-color: rgba(255, 255, 255, 0.851);
+}
+
+.whiteProjButton {
+    background-color: rgba(255, 255, 255, 0.851);
+    color: black;
+}
+
+li {
+    padding: 0;
+}
+
 button {
     transition: background-color 0.2s;
+    transition: color 0.1s;
 }
+
 button:hover {
     background-color: grey;
 }

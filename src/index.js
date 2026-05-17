@@ -1,6 +1,8 @@
 import "./styles.css"
 import { format, compareAsc, constructNow, differenceInDays } from "date-fns"
 
+let projects = [];
+
 class TodoItem {
     constructor(title, description, dueDate, prior) {
         this.title = title;
@@ -17,7 +19,7 @@ class TodoItem {
     }
 
     set priority(val) {
-        if (val != "low" && val != "medium" && val != "high") {
+        if (val != "Low" && val != "Medium" && val != "High") {
             console.error("Invalid priority");
         }
         
@@ -106,9 +108,11 @@ const DOMfunc = (() => {
             const todoTitle = document.createElement("h5");
             const desc = document.createElement("p");
             const todoDate = document.createElement("p");
+            const todoPriority = document.createElement("p");
             desc.classList.add("Description");
             todoDate.classList.add("dueDate");
             todoTitle.classList.add("todoTitle")
+            todoPriority.classList.add("todopriority");
             todoDate.textContent = `${format(todos[i].dueDate, "do MMM yyyy")} -
              ${control.findRemainingDays(todos[i])} days remaining`;
 
@@ -121,15 +125,33 @@ const DOMfunc = (() => {
 
             todoTitle.textContent = todos[i].title;
             desc.textContent = todos[i].description;
-            item.append(todoTitle, desc, todoDate);
+            todoPriority.textContent = `Priority: ${todos[i].priority}`;
+            item.append(todoTitle, desc, todoDate, todoPriority);
             todolist.appendChild(item);
         }
-        
+
         contentBox.replaceChildren(todolist);
     }
 
+    const displayProjects = () => {
+            const projList = document.createElement("ul");
+            projList.classList.add("projListButtons");
+            for (let proj = 0; proj < projects.length; proj++) {
+                const item = document.createElement("li");
+                const projButton = document.createElement("button");
+                projButton.type = "button";
+                projButton.classList.add("blackProjButton");
+                projButton.textContent = projects[proj].name;
+                projButton.addEventListener("click", control.setCurrentProject)
+                item.appendChild(projButton);
+                projList.appendChild(item);
+            }
+            
+            document.querySelector(".sidebar").replaceChildren(projList);
+    }
+
     return { displayProjectTodos, projPopupVisible, projPopupHide, extractProjectName,
-    todoPopupVisible, todoPopupHide, extractTodoInfo };
+    todoPopupVisible, todoPopupHide, extractTodoInfo, displayProjects };
 })();
 
 
@@ -150,7 +172,9 @@ const control = (() => {
         const name = DOMfunc.extractProjectName();
         DOMfunc.projPopupHide();
         const project = new Project(name);
+        projects.push(project);
         DOMfunc.displayProjectTodos(project);
+        DOMfunc.displayProjects();
         currentProject = project;
     }
 
@@ -173,6 +197,18 @@ const control = (() => {
         DOMfunc.todoPopupHide();
     }
 
+    const setCurrentProject = (e) => {
+        const projName = e.target.textContent;
+        let selectedProject;
+        for (let proj of projects) {
+            if (projName == proj.name) {
+                selectedProject = proj
+            }
+        }
+        currentProject = selectedProject;
+        DOMfunc.displayProjectTodos(selectedProject);
+    }
+
     const addProjectTodoAction = (e) => {
         DOMfunc.todoPopupVisible();
     }
@@ -185,14 +221,16 @@ const control = (() => {
 
 
         const defaultProject = new Project("Untitled Project");
+        projects.push(defaultProject);
         currentProject = defaultProject;
         // const date1 = new Date(2026, 4, 25);
         // const todo1 = new TodoItem("Todo-1", "A testing thingy", date1, "low");
         // defaultProject.addTodo(todo1);
+        DOMfunc.displayProjects();
         DOMfunc.displayProjectTodos(defaultProject);
     }
 
-    return { init, findRemainingDays, criticalTime }
+    return { init, findRemainingDays, criticalTime, setCurrentProject }
 })();
 
 document.addEventListener("DOMContentLoaded", () => {
