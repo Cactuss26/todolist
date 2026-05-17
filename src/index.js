@@ -302,9 +302,6 @@ const control = (() => {
             currentProject = projects[0];
         }
 
-        // const date1 = new Date(2026, 4, 25);
-        // const todo1 = new TodoItem("Todo-1", "A testing thingy", date1, "low");
-        // defaultProject.addTodo(todo1);
         DOMfunc.displayProjects();
         DOMfunc.selectProjButton(currentProject);
         DOMfunc.displayProjectTodos(currentProject);
