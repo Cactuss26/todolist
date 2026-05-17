@@ -49,7 +49,8 @@ class TodoItem {
 
 
 class Project {
-    constructor(name) {
+    constructor(id, name) {
+        this.id = id;
         this.name = name;
     }
 
@@ -142,6 +143,7 @@ const DOMfunc = (() => {
                 projButton.type = "button";
                 projButton.classList.add("blackProjButton");
                 projButton.textContent = projects[proj].name;
+                projButton.id = `${projects[proj].id}`;
                 projButton.addEventListener("click", control.setCurrentProject)
                 item.appendChild(projButton);
                 projList.appendChild(item);
@@ -150,8 +152,16 @@ const DOMfunc = (() => {
             document.querySelector(".sidebar").replaceChildren(projList);
     }
 
+    const selectProjButton = (project) => {
+        document.querySelector(`#${project.id}`).classList.add("whiteProjButton");
+    }
+
+    const deselectProjButton = (project) => {
+        document.querySelector(`#${project.id}`).classList.remove("whiteProjButton");
+    }
+
     return { displayProjectTodos, projPopupVisible, projPopupHide, extractProjectName,
-    todoPopupVisible, todoPopupHide, extractTodoInfo, displayProjects };
+    todoPopupVisible, todoPopupHide, extractTodoInfo, displayProjects, selectProjButton, deselectProjButton };
 })();
 
 
@@ -171,11 +181,13 @@ const control = (() => {
         e.preventDefault();
         const name = DOMfunc.extractProjectName();
         DOMfunc.projPopupHide();
-        const project = new Project(name);
+        const project = new Project(createProjectid(), name);
         projects.push(project);
         DOMfunc.displayProjectTodos(project);
         DOMfunc.displayProjects();
+        DOMfunc.deselectProjButton(currentProject);
         currentProject = project;
+        DOMfunc.selectProjButton(currentProject);
     }
 
     const addProjAction = (e) => {
@@ -205,7 +217,9 @@ const control = (() => {
                 selectedProject = proj
             }
         }
+        DOMfunc.deselectProjButton(currentProject);
         currentProject = selectedProject;
+        DOMfunc.selectProjButton(currentProject);
         DOMfunc.displayProjectTodos(selectedProject);
     }
 
@@ -213,6 +227,16 @@ const control = (() => {
         DOMfunc.todoPopupVisible();
     }
     
+    const createProjectid = () => {
+        const chars = "abcdefghijklmnopqrstuvwxyz"
+        let s = "";
+        for (let i = 0; i < 30; i++) {
+            s += chars[Math.floor(Math.random() * 10)]
+        }
+
+        return s;
+    }
+
     const init = () => {
         document.querySelector(".newproject").addEventListener("click", addProjAction);
         document.querySelector(".addTodoButton").addEventListener("click", addProjectTodoAction);
@@ -220,13 +244,14 @@ const control = (() => {
         document.querySelector(".projSubmitButton").addEventListener("click", addProj);
 
 
-        const defaultProject = new Project("Untitled Project");
+        const defaultProject = new Project(createProjectid(), "Untitled Project");
         projects.push(defaultProject);
         currentProject = defaultProject;
         // const date1 = new Date(2026, 4, 25);
         // const todo1 = new TodoItem("Todo-1", "A testing thingy", date1, "low");
         // defaultProject.addTodo(todo1);
         DOMfunc.displayProjects();
+        DOMfunc.selectProjButton(currentProject);
         DOMfunc.displayProjectTodos(defaultProject);
     }
 

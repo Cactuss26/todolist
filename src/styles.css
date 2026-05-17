@@ -283,6 +283,10 @@ li {
     color: black;
 }
 
+.whiteProjButton:hover {
+    cursor: default;
+}
+
 li {
     padding: 0;
 }
@@ -294,4 +298,5 @@ button {
 
 button:hover {
     background-color: grey;
+    cursor: pointer;
 }
